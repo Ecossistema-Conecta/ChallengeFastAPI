@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{{ title if title else "FastAPI Challenge" }}</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <div class="header">
+        <div class="logo-area">
+            <img src="/static/img/hero_icon.png" alt="Logo" class="logo" />
+            <h1 class="game-title">FastAPI Challenge Arena</h1>
+        </div>
+        <nav class="navigation">
+            {% if next_step %}
+                <a href="/challenge?step={{ next_step }}">Etapa {{ next_step }}</a>
+            {% endif %}
+        </nav>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Fast API playful - By Guilherme Pereira Lims</p>
+    </div>
+</body>
+</html>

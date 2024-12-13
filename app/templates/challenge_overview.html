@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="overview-container">
+    <h2>Bem-vindo ao FastAPI Challenge Arena</h2>
+    <p>
+        Neste desafio, você será introduzido ao desenvolvimento de APIs usando o
+        <strong>FastAPI</strong>, um framework moderno, rápido e intuitivo. A ideia é colocar em prática
+        conceitos fundamentais de criação de endpoints, integração com banco de dados,
+        validação de dados usando schemas, e exploração dos recursos do próprio FastAPI.
+    </p>
+    <p>
+        Ao longo do desafio, você irá construir gradualmente uma aplicação para gerenciar um grupo
+        de heróis — cada um com atributos, poderes e histórico. Essa abordagem lúdica e imersiva
+        ajudará a aprender de forma mais divertida.
+    </p>
+
+    <div class="section">
+        <h3>Por que FastAPI?</h3>
+        <p>
+            O FastAPI é um framework Python que facilita a criação de APIs performáticas e seguras.
+            Seus pontos fortes incluem:
+        </p>
+        <ul>
+            <li><strong>Alto Desempenho:</strong> Comparável a frameworks Node.js e Go.</li>
+            <li><strong>Validação Automática de Dados:</strong> Usando Pydantic, reduz erros de entrada.</li>
+            <li><strong>Documentação Interativa:</strong> Swagger UI integrada, facilitando testes e exploração da API.</li>
+            <li><strong>Simplicidade e Tipagem:</strong> Código mais limpo, seguro e fácil de manter.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>O Contexto do Projeto</h3>
+        <p>
+            Imagine uma liga de heróis, cada um com poderes e características únicas. A missão deste
+            desafio é criar uma API para gerenciar esses personagens: você poderá
+            cadastrá-los, listar, atualizar e remover do banco de dados.
+            Isso servirá como base para aprender a construir endpoints REST, manipular dados e
+            estruturar um projeto de forma profissional.
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>Heróis em Destaque</h3>
+        <div class="heroes-grid">
+            <div class="hero-card">
+                <img src="/static/img/SuperHome.png" alt="Super Home" class="hero-image"/>
+                <h4>Super Home</h4>
+                <p>Super-Home é o defensor da Vila Abobrinha. Com super-força, super-velocidade e visão de raio-X, ele combate ameaças como a temida "Kriptopira".</p>
+            </div>
+            <div class="hero-card">
+                <img style="padding-bottom: 55px" src="/static/img/flash.png" alt="Homem Aranha" class="hero-image"/>
+                <h4>Flash</h4>
+                <p>O Flash é o velocista mais estiloso e aleatório que o mundo já viu! Sempre pronto com uma pose épica e frases como “Faz o L!”.</p>
+            </div>
+            <div class="hero-card">
+                <img style="padding-bottom: 20px" src="/static/img/docinho.jpg" alt="Flash" class="hero-image"/>
+                <h4>Docinho</h4>
+                <p>Docinho é a força física das Meninas Superpoderosas, capaz de destruir muros e derrubar vilões com um só soco. Sua especialidade está em golpes poderosos e sua habilidade em luta corpo a corpo.</p>
+            </div>
+            <div class="hero-card">
+                <img style="padding-bottom: 20px" src="/static/img/shera.jpeg" alt="Flash" class="hero-image"/>
+                <h4>Shera</h4>
+                <p>he-Ra empunha a Espada da Proteção, que lhe concede força sobre-humana, resistência incrível e a habilidade de transformar sua espada em diferentes ferramentas ou armas. Ela lidera os Rebeldes de Etheria, lutando contra a Horda do Mal.</p>
+            </div>
+        </div>
+        <p>
+            Esses heróis são apenas exemplos visuais. Na próxima etapa, você realmente definirá
+            os dados e manipulará a persistência desses personagens no banco.
+        </p>
+    </div>
+
+    <div class="next-step-hint">
+        <h3>Próximos Passos</h3>
+        <p>
+            Agora que você conhece o contexto geral, vamos partir para a ação! Na
+            <a href="/challenge?step={{ next_step }}" class="external-link">Etapa {{ next_step }}</a>, você começará a criar rotas simples
+            de CRUD para gerenciar os heróis no banco de dados. Vamos colocar a mão na massa!
+        </p>
+        <a href="/challenge?step={{ next_step }}" class="btn">Iniciar Etapa 1</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="challenge-container">
+    <h2>Etapa 1: Começando sua Jornada</h2>
+    <p>
+        Bem-vindo ao primeiro passo do desafio! Nesta etapa, você deverá criar rotas básicas
+        para um CRUD de super-heróis. Você já possui a tabela e os schemas relacionados.
+        A missão é simples: utilizar o FastAPI em conjunto com o SQLAlchemy para inserir, listar,
+        atualizar e remover heróis do banco de dados.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você precisa fazer?</h3>
+        <ul>
+            <li>Criar rotas como <code>/heroes</code> para listar, <code>/heroes/{id}</code> para detalhar,
+            <code>POST /heroes</code> para criar e <code>DELETE /heroes/{id}</code> para remover.</li>
+            <li>Utilizar os <strong>schemas Pydantic</strong> já definidos para validação de entrada/saída.</li>
+            <li>Trabalhar com o <code>Depends</code> do FastAPI para gerenciar a sessão do banco (SQLAlchemy).</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>Resumo sobre FastAPI e CRUD</h3>
+        <p>O FastAPI é um framework rápido e moderno, ideal para construir APIs utilizando Python.
+        Ele é intuitivo e possui tipagem forte, o que facilita a manutenção e testes.
+        Para trabalhar com banco de dados, geralmente utiliza-se o SQLAlchemy e o Alembic (para migrações).
+        O padrão é criar um objeto Session através do `Depends`, facilitando a injeção de dependência.
+        </p>
+        <p>Os <em>schemas</em> (modelos Pydantic) garantem que a entrada e a saída das rotas estejam
+        de acordo com o esperado, enquanto as <em>models</em> do SQLAlchemy representam as tabelas do banco.</p>
+    </div>
+
+    <div class="repo-link">
+        <h3>Repositório do Projeto</h3>
+        <p>
+            Confira o código base no GitHub:
+            <a href="https://github.com/Ecossistema-Conecta/WorkshopFastAPI" target="_blank" class="external-link">
+                <img src="/static/img/github_icon.png" class="icon"/>
+                Acesse o Repositório
+            </a>
+        </p>
+    </div>
+
+    <div class="next-step-hint">
+        <h3>Próximos Passos</h3>
+        <p>
+            Esta página servirá como um “guia” do seu desafio. Complete o CRUD e, depois, passe para a próxima etapa,
+            onde adicionaremos funcionalidades mais avançadas. Mantenha essa página aberta como um mapa de missões.
+        </p>
+    </div>
+</div>
+{% endblock %}
