@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 2: Banco de Dados Postgres e Migrações com Alembic</h2>
+    <p>
+        Agora que o CRUD está estabelecido, é hora de preparar um ambiente de banco de dados mais robusto e
+        escalável. Nesta etapa, você irá configurar um banco Postgres em um container e utilizar o Alembic
+        para gerenciar as migrações do schema.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Subir um container com Postgres.</li>
+            <li>Configurar a aplicação para usar o Postgres em vez de SQLite.</li>
+            <li>Utilizar o Alembic para criar e aplicar migrações no banco.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>Por que Postgres e Alembic?</h3>
+        <p>
+            <strong>Postgres:</strong> Um banco de dados SQL poderoso, confiável e amplamente utilizado
+            em produção. Ele oferece recursos avançados, segurança, performance e extensões úteis.
+        </p>
+        <p>
+            <strong>Alembic:</strong> Uma ferramenta de migrações para SQLAlchemy. Permite versionar
+            o schema do banco, criando um histórico de mudanças e facilitando atualizações
+            conforme o projeto evolui.
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>Executando o Postgres em um Container</h3>
+        <p>
+            Você pode facilmente iniciar um Postgres localmente modificando seu docker compose para incluir o serviço:
+        </p>
+        <div class="code-snippet">
+<pre><code class="language-bash">
+version: '3.8'
+
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres_db
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres_db:5432/postgres
+    volumes:
+      - .:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  postgres_db:
+    container_name: postgres_db
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+</code></pre>
+        </div>
+        <p>
+            Isso iniciará um container com Postgres exposto na porta 5432.
+        </p>
+        <p>
+            Ajuste o trecho <code>password</code> pela senha de sua preferência.
+        </p>
+    </div>
+
+    <div class="section">
+    <h3>Configurando o Alembic</h3>
+    <p>
+        O Alembic gerencia migrações baseadas no seu modelo. Após instalar o Alembic (<code>poetry add alembic</code>),
+        siga os passos abaixo para configurar:
+    </p>
+
+    <h4>1. Iniciar o Alembic</h4>
+    <p>Inicie o Alembic criando a pasta de migrações:</p>
+    <div class="code-snippet">
+<pre><code class="language-bash">
+alembic init migrations
+</code></pre>
+    </div>
+
+    <h4>2. Ajustar o arquivo de configuração</h4>
+    <p>
+        No <code>alembic.ini</code>, descomente a linha que define o template de nome de arquivo:
+    </p>
+    <div class="code-snippet">
+<pre><code>
+# file_template = %%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(rev)s_%%(slug)s
+</code></pre>
+    </div>
+    <p>
+        Assim as migrações terão a data no nome do arquivo, ajudando no histórico.
+    </p>
+
+    <h4>3. Ajustar o <code>env.py</code></h4>
+    <p>
+        Dentro de <code>migrations/env.py</code>, importe suas models e defina o <code>target_metadata</code>.
+        Por exemplo:
+    </p>
+    <div class="code-snippet">
+<pre><code class="language-python">
+from path.models import ModelBase  # Ajuste para o caminho real das suas models
+
+# Use as metadata das suas models
+target_metadata = ModelBase.metadata
+</code></pre>
+    </div>
+    <p>
+        Além disso, configure a URL do banco de dados usando o <code>os.getenv</code>:
+    </p>
+    <div class="code-snippet">
+<pre><code class="language-python">
+import os
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+</code></pre>
+    </div>
+    <p>
+        Certifique-se também de importar todas as models necessárias aqui, para que o Alembic conheça o schema.
+        Se as suas models estiverem num mesmo arquivo, é só usar:
+    </p>
+    <div class="code-snippet">
+<pre><code class="language-python">
+from path.models import *
+</code></pre>
+    </div>
+    <h4>4. Gerar e Aplicar Migrações</h4>
+    <p>
+        Com tudo configurado, gere uma migração inicial:
+    </p>
+    <div class="code-snippet">
+<pre><code class="language-bash">
+alembic revision --autogenerate -m "Create heroes table"
+alembic upgrade head
+</code></pre>
+    </div>
+    <p>
+        O Alembic irá analisar seus models e criar um script de migração a partir das diferenças entre o código
+        e o schema do banco. Após isso, a migração é aplicada com <code>upgrade head</code>.
+    </p>
+
+    <p>
+        Pronto! Você agora tem o Alembic configurado para gerenciar migrações do seu schema de banco.
+    </p>
+</div>
+
+
+    <div class="section">
+        <h3>Expandindo o Modelo de Dados</h3>
+        <p>
+            Com a migração configurada, fica mais fácil adicionar novas tabelas. Por exemplo,
+            você pode criar uma tabela <code>teams</code> para gerenciar equipes, ou <code>powers</code>
+            para catalogar habilidades dos heróis. Após ajustar os models, basta rodar:
+        </p>
+        <div class="code-snippet">
+<pre><code class="language-bash">
+alembic revision --autogenerate -m "Add powers table"
+alembic upgrade head
+</code></pre>
+        </div>
+        <p>
+            Assim, seu schema evolui de forma organizada e rastreável.
+        </p>
+    </div>
+{% endblock %}
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Recursos e Referências</h3>
+        <ul>
+            <li><a href="https://www.postgresql.org/docs/" class="external-link" target="_blank">Documentação do Postgres</a></li>
+            <li><a href="https://alembic.sqlalchemy.org/en/latest/" class="external-link" target="_blank">Documentação do Alembic</a></li>
+            <li><a href="https://fastapi.tiangolo.com/advanced/async-sql-databases/" class="external-link" target="_blank">FastAPI + Databases</a></li>
+        </ul>
+        <p>
+            Com seu banco configurado e migrações sob controle, vamos avançar para a próxima etapa,
+            onde falaremos de padrões de projeto, organização do código e integração externa.
+        </p>
+        <a href="/challenge?step=3" class="btn">Avançar para Etapa 3</a>
+    </div>
+{% endblock %}

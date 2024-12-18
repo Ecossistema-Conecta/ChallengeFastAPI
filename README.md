@@ -30,3 +30,5 @@ Suba o projeto
 ### Instruções
 
 Abra a url http://localhost:8000/challenge e leia as instruções para o desafio.
+
+Para o envio de email de feedback funcionar corretamente é preciso cadastrar a chave do SENDGRID no arquivo app.utils.constants.

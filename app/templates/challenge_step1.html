@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="challenge-container">
     <h2>Etapa 1: Começando sua Jornada</h2>
     <p>
         Bem-vindo ao primeiro passo do desafio! Nesta etapa, você deverá criar rotas básicas
@@ -31,23 +30,15 @@
         de acordo com o esperado, enquanto as <em>models</em> do SQLAlchemy representam as tabelas do banco.</p>
     </div>
 
-    <div class="repo-link">
-        <h3>Repositório do Projeto</h3>
-        <p>
-            Confira o código base no GitHub:
-            <a href="https://github.com/Ecossistema-Conecta/WorkshopFastAPI" target="_blank" class="external-link">
-                <img src="/static/img/github_icon.png" class="icon"/>
-                Acesse o Repositório
-            </a>
-        </p>
-    </div>
+{% endblock %}
 
+{% block next_step_hint %}
     <div class="next-step-hint">
         <h3>Próximos Passos</h3>
         <p>
             Esta página servirá como um “guia” do seu desafio. Complete o CRUD e, depois, passe para a próxima etapa,
             onde adicionaremos funcionalidades mais avançadas. Mantenha essa página aberta como um mapa de missões.
         </p>
+        <a href="/challenge?step={{ next_step }}" class="btn">Avançar para Etapa 2</a>
     </div>
-</div>
 {% endblock %}

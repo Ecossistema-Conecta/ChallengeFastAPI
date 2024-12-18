@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 8: GraphQL com FastAPI e Strawberry</h2>
+    <p>
+        Nesta etapa, você aprenderá sobre <strong>GraphQL</strong>, um padrão moderno para APIs que permite
+        aos clientes especificarem exatamente os dados que desejam receber.
+        Usaremos o <strong>Strawberry</strong>, uma biblioteca Python simples e poderosa, para integrar GraphQL ao FastAPI.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Entender o que é GraphQL e como ele se compara ao REST.</li>
+            <li>Adicionar um endpoint GraphQL ao projeto usando Strawberry.</li>
+            <li>Definir queries e mutations para manipular heróis no banco.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>O que é GraphQL?</h3>
+        <p>
+            GraphQL é uma linguagem de consulta para APIs que permite buscar exatamente os dados necessários,
+            em uma única requisição.
+            Comparado ao REST, ele é especialmente útil em situações como:
+        </p>
+        <ul>
+            <li><strong>Evitar Overfetching:</strong> Buscar apenas os campos necessários, sem dados extras.</li>
+            <li><strong>Reduzir Round-Trips:</strong> Buscar dados relacionados em uma única requisição.</li>
+            <li><strong>APIs Flexíveis:</strong> O cliente decide quais dados quer receber.</li>
+        </ul>
+        <p>
+            Um exemplo de query GraphQL para listar heróis com nome e time seria:
+        </p>
+        <div class="code-snippet">
+<pre><code class="language-graphql">
+query {
+  heroes {
+    name
+    team
+  }
+}
+</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Adicionando GraphQL com Strawberry</h3>
+        <p>Para integrar GraphQL ao FastAPI, siga os passos abaixo:</p>
+        <div class="code-snippet">
+<pre><code class="language-bash">
+# Instalar Strawberry
+poetry add strawberry-graphql
+
+# Adicionar o schema ao FastAPI
+</code></pre>
+        </div>
+        <p>Defina um schema simples no projeto:</p>
+        <div class="code-snippet">
+<pre><code class="language-python">
+import strawberry
+from fastapi import FastAPI
+from strawberry.fastapi import GraphQLRouter
+
+@strawberry.type
+class Hero:
+    name: str
+    team: str
+
+@strawberry.type
+class Query:
+    @strawberry.field
+    def heroes(self) -> list[Hero]:
+        return [Hero(name="Superman", team="Justice League")]
+
+schema = strawberry.Schema(query=Query)
+
+app = FastAPI()
+app.include_router(GraphQLRouter(schema), prefix="/graphql")
+</code></pre>
+        </div>
+        <p>
+            Agora, você pode acessar <code>/graphql</code> para executar queries no playground interativo.
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Referências e Estudos Adicionais</h3>
+        <ul>
+            <li><a href="https://strawberry.rocks/" target="_blank" class="external-link">Documentação do Strawberry</a></li>
+            <li><a href="https://graphql.org/" target="_blank" class="external-link">Documentação Oficial do GraphQL</a></li>
+            <li><a href="https://graphql.org/learn/" target="_blank" class="external-link">GraphQL: Conceitos Básicos</a></li>
+        </ul>
+        <p>
+            Agora que você entende GraphQL, sua aplicação está preparada para oferecer uma experiência de API ainda mais flexível e moderna!
+        </p>
+        <a href="/challenge?step=9" class="btn">Avançar para Etapa 9</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 7: Testes com Pytest</h2>
+    <p>
+        Testes são uma parte essencial de qualquer projeto. Eles garantem que o código funciona como esperado,
+        mesmo após mudanças ou refatorações. Nesta etapa, você aprenderá a usar o <strong>pytest</strong> para
+        criar testes unitários e de integração no seu projeto FastAPI.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Configurar o <strong>pytest</strong> no projeto.</li>
+            <li>Escrever testes unitários para funções isoladas.</li>
+            <li>Escrever testes de integração para endpoints FastAPI.</li>
+            <li>Entender boas práticas para cobertura de código.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>Por que Testar?</h3>
+        <p>
+            Testes ajudam a identificar erros antes que eles cheguem em produção.
+            Além disso, servem como uma documentação viva do comportamento esperado do código.
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>Tipos de Testes</h3>
+        <ul>
+            <li><strong>Testes Unitários:</strong> Testam uma única unidade do código, como uma função ou método.</li>
+            <li><strong>Testes de Integração:</strong> Verificam a interação entre diferentes partes do sistema, como rotas e banco de dados.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>Configuração Básica do Pytest</h3>
+        <p>Instale o pytest no seu projeto:</p>
+        <div class="code-snippet">
+<pre><code class="language-bash">
+poetry add pytest
+</code></pre>
+        </div>
+        <p>Escreva um teste básico em <code>tests/test_sample.py</code>:</p>
+        <div class="code-snippet">
+<pre><code class="language-python">
+from app.main import app
+from fastapi.testclient import TestClient
+
+client = TestClient(app)
+
+def test_read_root():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello, World!"}
+</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Rodando os Testes</h3>
+        <p>Execute todos os testes com o comando:</p>
+        <div class="code-snippet">
+<pre><code class="language-bash">
+pytest
+</code></pre>
+        </div>
+        <p>Você verá os resultados detalhados no terminal.</p>
+    </div>
+
+{% endblock %}
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Referências e Estudos Adicionais</h3>
+        <ul>
+            <li><a href="https://docs.pytest.org/en/latest/" target="_blank" class="external-link">Documentação Oficial do Pytest</a></li>
+            <li><a href="https://fastapi.tiangolo.com/advanced/async-tests/" target="_blank" class="external-link">FastAPI: Guia de Testes Assíncronos</a></li>
+            <li><a href="https://realpython.com/pytest-python-testing/" target="_blank" class="external-link">Tutorial Pytest (Real Python)</a></li>
+        </ul>
+        <p>
+            Com testes bem estruturados, seu projeto será mais confiável e seguro. Continue testando e iterando!
+        </p>
+        <a href="/challenge?step=8" class="btn">Avançar para Etapa 8</a>
+    </div>
+{% endblock %}

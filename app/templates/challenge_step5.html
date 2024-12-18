@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 5: Autenticação e Autorização</h2>
+    <p>
+        Agora que você já tem uma aplicação bem estruturada e documentada, é fundamental garantir a segurança.
+        Nesta etapa, você irá implementar um sistema de autenticação e autorização, assegurando que apenas
+        usuários legítimos tenham acesso a rotas sensíveis.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Criar um endpoint de <strong>login</strong> para receber usuário e senha, e gerar um token JWT.</li>
+            <li>Proteger rotas com um <strong>security dependency</strong> que valida o JWT.</li>
+            <li>Adicionar <strong>autorização baseada em roles</strong>, permitindo, por exemplo, que apenas administradores possam excluir heróis.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>Autenticação e Autorização: Conceitos-Chave</h3>
+        <ul>
+            <li><strong>Autenticação:</strong> Verifica a identidade do usuário. Com JWT, o usuário faz login uma vez e recebe um token.</li>
+            <li><strong>Autorização:</strong> Determina o que o usuário autenticado pode fazer. Por exemplo, um usuário comum pode criar heróis, mas não pode deletar; um administrador pode tudo.</li>
+            <li><strong>JWT (JSON Web Token):</strong> Um token assinado, contendo informações do usuário (claims), permitindo que o servidor valide a identidade sem precisar consultar o banco a cada requisição.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>Exemplo de Login e Proteção de Rotas</h3>
+        <div class="code-snippet">
+<pre><code class="language-python">
+from datetime import datetime, timedelta
+from jose import jwt
+from typing import Annotated
+
+SECRET_KEY = "chave-secreta"
+ALGORITHM = "HS256"
+
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=30))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+# Exemplo de rotas com autenticação e autorização
+@router.post("/login")
+def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    access_token = create_access_token({"sub": user.username, "role": user.role})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+# Injeção da dependência de segurança
+@router.get("/heroes", response_model=List[Hero])
+def read_heroes(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    # current_user foi obtido após validar o token. Se inválido, 401 é retornado automaticamente.
+    return get_all_heroes(db)
+</code></pre>
+        </div>
+        <p>
+            Aqui, <code>get_current_user</code> seria uma função que valida o JWT no cabeçalho
+            <code>Authorization: Bearer &lt;token&gt;</code>, obtendo o usuário atual.
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>Autorização Baseada em Roles</h3>
+        <p>
+            Ao armazenar a role do usuário no JWT (por exemplo, <code>"role": "admin"</code>),
+            você pode checar dentro das rotas ou na camada de serviço se o usuário tem permissão
+            para executar a ação desejada. Exemplo:
+        </p>
+        <div class="code-snippet">
+<pre><code class="language-python">
+@router.delete("/heroes/{hero_id}")
+def delete_hero(hero_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+    return remove_hero(db, hero_id)
+</code></pre>
+        </div>
+        <p>
+            Assim, apenas administradores podem remover heróis.
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Referências e Estudos Adicionais</h3>
+        <ul>
+            <li><a href="https://fastapi.tiangolo.com/advanced/security/http-basic-auth/" target="_blank" class="external-link">Documentação do FastAPI sobre Segurança</a></li>
+            <li><a href="https://realpython.com/token-based-authentication-with-flask/" target="_blank" class="external-link">Artigo sobre JWT e Token-Based Auth (conceitos aplicáveis também ao FastAPI)</a></li>
+            <li><a href="https://datatracker.ietf.org/doc/html/rfc7519" target="_blank" class="external-link">RFC do JWT (Padrão Oficial)</a></li>
+        </ul>
+        <p>
+            Agora você tem autenticação, autorização, um arcabouço sólido de código, documentação e boas práticas.
+            Continue explorando e aprimorando sua aplicação conforme suas necessidades.
+        </p>
+        <a href="/challenge?step={{ next_step }}" class="btn">Avançar para Etapa 6</a>
+    </div>
+{% endblock %}

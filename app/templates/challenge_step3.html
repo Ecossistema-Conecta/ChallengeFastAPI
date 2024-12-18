@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 3: Padrões de Projeto, Organização e Integração Externa</h2>
+    <p>
+        Nesta etapa, você dará um salto arquitetural. Além de ter um CRUD estável e um banco robusto,
+        agora irá adotar padrões de projeto, separar responsabilidades em camadas claras, manter
+        constantes em um arquivo próprio e organizar seus routers de forma modular. Além disso,
+        reafirmaremos a integração com APIs externas para enriquecer os dados dos heróis.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Aplicar o padrão <strong>Repository</strong> para acesso ao banco, isolando SQLAlchemy.</li>
+            <li>Criar uma <strong>Service Layer</strong> para a lógica de negócio, chamando repositórios e APIs externas.</li>
+            <li>Centralizar <strong>constantes</strong> e configurações em um arquivo próprio (ex: <code>app/core/config.py</code>).</li>
+            <li>Separar <strong>routers</strong> em arquivos distintos, facilitando a manutenção.</li>
+            <li>Integrar dados externos (por ex., da SuperHero API) sem poluir as rotas.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>Por que tudo isso?</h3>
+        <p>
+            Uma arquitetura limpa facilita a evolução do projeto: você pode trocar de banco, mudar o
+            provedor externo de dados, adicionar novas funcionalidades, tudo sem quebrar o resto do sistema.
+            Além disso, testes se tornam mais simples, já que cada camada está isolada.
+        </p>
+        <p>
+            Por exemplo, se quiser trocar a API externa, basta alterar a lógica na camada de serviço,
+            sem mudar as rotas ou o repositório.
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>Exemplo de Estrutura de Pastas</h3>
+        <div class="code-snippet">
+<pre><code>
+app/
+├─ core/
+│  ├─ config.py        # configurações (ex: DB_URL, API_KEYS com pydantic Settings)
+│  └─ constants.py     # constantes (ex: URLs de API, mensagens de erro)
+├─ db/
+│  ├─ session.py       # get_db
+│  ├─ models.py        # Modelos SQLAlchemy
+│  └─ repository.py    # Repository Pattern (HeroRepository)
+├─ services/
+│  ├─ hero_service.py  # Lógica de negócio, integra com repository e API externa
+│  └─ external_api.py  # Funções para chamar a API externa
+├─ routers/
+│  ├─ heroes.py        # Rotas de heróis
+│  ├─ powers.py         # Rotas de poderes (exemplo)
+│  └─ __init__.py
+└─ main.py
+</code></pre>
+        </div>
+        <p>
+            Aqui, as rotas chamam o <code>hero_service</code>, que chama o <code>HeroRepository</code> e
+            <code>external_api</code>, enquanto <code>constants.py</code> guarda constantes como URLs de API.
+        </p>
+    </div>
+
+    <div class="section">
+    <h3>Integração Externa: Exemplo Prático</h3>
+    <p>
+        Além de apenas citar, vamos supor que você queira enriquecer informações de um herói local
+        usando dados da API externa do League of Legends (LoL). Imagine que você já tenha o nome
+        do herói internamente, mas quer obter mais detalhes (como estatísticas e habilidades) dessa fonte externa
+        antes de salvar ou atualizar no banco.
+    </p>
+    <p>
+        Na camada de serviço, você pode ter algo assim (código meramente ilustrativo):
+    </p>
+    <div class="code-snippet">
+<pre><code class="language-python">
+import httpx
+
+class HeroService:
+    def __init__(self, repository, external_api_url: str):
+        self.repository = repository
+        self.external_api_url = external_api_url
+
+    async def enrich_and_save_hero(self, hero_name: str):
+        hero = self.repository.get_hero_by_name(hero_name)
+        if not hero:
+            raise ValueError("Herói não encontrado no banco")
+
+        # Faz chamada à API externa do LoL, por exemplo:
+        # Supondo a rota com dados de heroi do LoL
+        # GET https://ddragon.leagueoflegends.com/cdn/14.24.1/data/pt_BR/champion/{hero_name}.json
+        async with httpx.AsyncClient() as client:
+            response = await client.get(self.external_api_url.format(hero_name=hero_name))
+            response.raise_for_status()
+            external_data = response.json()
+
+        # Consultas baseadas no retorno da api em 16/12/2024
+        data = external_data.get('data', {}).get(hero_name, {})
+        data_info = data.get('info', {})
+
+        # Mescla dados externos com dados internos
+        # Por exemplo, adicionar atributos ou um lore mais completo
+        hero.attack = data_info.get("attack", hero.attack)
+        hero.defense = data_info.get("defense", hero.defense)
+        hero.difficulty = data_info.get("difficulty", hero.difficulty)
+        hero.backstory = data.get("lore", hero.backstory)
+
+        # Salva as atualizações no banco
+        self.repository.update_hero(hero)
+
+        return hero
+</code></pre>
+    </div>
+    <p>
+        Nesse exemplo, o <code>HeroService</code> consulta o banco para obter o herói, faz uma requisição
+        à API externa do LoL para obter dados mais ricos (habilidades, lore, atributos),
+        atualiza o objeto do herói e salva novamente no banco.
+    </p>
+    <p>
+        Assim, o serviço atua como o "orquestrador", e suas rotas não precisam saber como acessar a API externa,
+        nem como o herói é salvo. Elas apenas chamam o serviço, que lida com todos os detalhes por trás.
+    </p>
+</div>
+
+
+    <div class="section">
+        <h3>Referências de Estudo</h3>
+        <p>
+            Para entender melhor padrões de projeto e arquiteturas limpas:
+        </p>
+        <ul>
+            <li><a href="https://refactoring.guru/" target="_blank" class="external-link">Refactor.Guru</a> – Excelente fonte sobre Design Patterns e boas práticas.</li>
+            <li><a href="https://fastapi.tiangolo.com/advanced/" target="_blank" class="external-link">Documentação Avançada do FastAPI</a> – Dicas sobre grandes projetos, middlewares, etc.</li>
+            <li><a href="https://github.com/tiangolo/full-stack-fastapi-postgresql" target="_blank" class="external-link">Exemplo de Projeto Full-Stack FastAPI + Postgres</a></li>
+        </ul>
+        <p>
+            Estude, adapte e aplique conforme seu projeto cresce.
+        </p>
+    </div>
+
+{% endblock %}
+
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Agora é sua vez!</h3>
+        <p>
+            Com padrões de projeto, arquitetura organizada, constantes centralizadas, routers
+            separados e integração externa, sua aplicação está muito mais profissional e fácil de evoluir.
+            Experimente adicionar novas funcionalidades, testar diferentes APIs e continuar aprimorando.
+        </p>
+        <a href="/challenge?step={{ next_step }}" class="btn">Avançar para Etapa 4</a>
+    </div>
+{% endblock %}

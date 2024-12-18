@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 4: Documentação com MkDocs e Docstrings Automáticas</h2>
+    <p>
+        Ter uma documentação atualizada e integrada ao código é crucial para o sucesso de qualquer projeto.
+        Com o <strong>MkDocs</strong>, você pode criar documentação rica e navegar facilmente por ela.
+        Ao integrar o plugin <strong>mkdocstrings</strong>, sua documentação será gerada automaticamente
+        a partir das docstrings presentes no código, reduzindo esforço manual e mantendo consistência.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Instalar o MkDocs e configurar uma estrutura básica de documentação.</li>
+            <li>Adicionar o plugin <strong>mkdocstrings</strong> para gerar documentação das docstrings do código.</li>
+            <li>Aprender boas práticas para escrever docstrings úteis e detalhadas.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>Por que MkDocs com Docstrings?</h3>
+        <p>
+            A combinação de MkDocs com <strong>mkdocstrings</strong> permite que você escreva a documentação
+            diretamente no código, usando docstrings. Assim, as mudanças no código e na documentação
+            ficam sincronizadas, evitando inconsistências e facilitando a manutenção.
+        </p>
+    </div>
+{% endblock %}
+
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Referências e Estudos Adicionais</h3>
+        <ul>
+            <li><a href="https://www.mkdocs.org/" target="_blank" class="external-link">Documentação Oficial do MkDocs</a></li>
+            <li><a href="https://github.com/mkdocstrings/mkdocstrings" target="_blank" class="external-link">Mkdocstrings</a></li>
+            <li><a href="https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings" target="_blank" class="external-link">Guia de Docstrings do Google</a></li>
+        </ul>
+        <p>
+            Com a documentação automatizada, seu projeto estará sempre atualizado e acessível.
+            Vamos avançar para a próxima etapa, onde abordaremos autenticação e autorização.
+        </p>
+        <a href="/challenge?step=5" class="btn">Avançar para Etapa 5</a>
+    </div>
+{% endblock %}

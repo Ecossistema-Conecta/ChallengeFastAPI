@@ -1,0 +1,29 @@
+<html>
+<head></head>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <div style="background: #FFD700; padding: 15px;">
+            <h2 style="margin:0; color:#333; font-size: 24px;">Feedback da Etapa {{ step }}</h2>
+        </div>
+        <div style="padding: 20px; color:#333;">
+            <p style="font-size: 16px; line-height: 1.5;">
+                Olá, equipe responsável pela Etapa {{ step }}!
+            </p>
+            <p style="font-size: 16px; line-height: 1.5;">
+                Um usuário enviou o seguinte comentário:
+            </p>
+            <blockquote style="border-left: 4px solid #DDD; margin: 15px 0; padding-left: 10px; color: #555;">
+                {{ comment }}
+            </blockquote>
+            <p style="font-size: 14px; line-height: 1.5; color: #777;">
+                Por favor, leve este feedback em consideração para melhorar ainda mais a experiência.
+            </p>
+        </div>
+        <div style="background: #EEE; padding: 10px; text-align: center;">
+            <p style="font-size: 12px; color:#555; margin:0;">
+                Este e-mail foi gerado automaticamente pelo sistema de feedback do desafio.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

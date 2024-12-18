@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 9: Templates e Design Thinking para Wiki de Heróis</h2>
+    <p>
+        Nesta etapa, você criará páginas detalhadas para cada herói, no estilo de wikis como as de Dota ou LoL.
+        O foco será criar uma interface atraente e informativa, com elementos visuais que realcem os atributos
+        e habilidades dos heróis.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Desenhar um protótipo no <strong>Figma</strong> ou outra ferramenta similar.</li>
+            <li>Estruturar o front end com o Jinja2 ou outro framework escolhido (Vuejs, React, etc).</li>
+            <li>Adicionar elementos visuais como ícones, gráficos e tabelas estilizadas.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>Por que Design Thinking?</h3>
+        <p>
+            Design Thinking ajuda a criar interfaces que priorizam a experiência do usuário (UX).
+            Ao prototipar antes de implementar, você evita retrabalho e garante que a interface final
+            esteja alinhada com as necessidades dos usuários.
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>Usando o Figma para Prototipar</h3>
+        <p>
+            O <strong>Figma</strong> é uma ferramenta poderosa para criar protótipos interativos.
+            Você pode desenhar os layouts das páginas, testar interações e obter feedback antes de implementar.
+        </p>
+        <div class="code-snippet">
+<pre><code>
+# Estrutura típica de uma página de herói
+- Nome do Herói
+- Imagem de destaque
+- Atributos principais (força, velocidade, etc.)
+- Habilidades (com descrição e efeitos)
+- Histórico
+</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Estruturando a Tela</h3>
+        <p>
+            Você pode fazer o front end dentro do projeto do FastAPI com Jinja2 ou criar seu front end com frameworks
+            especializados, como VueJs ou React.
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Referências e Estudos Adicionais</h3>
+        <ul>
+            <li><a href="https://www.figma.com/" target="_blank" class="external-link">Figma: Ferramenta de Prototipagem</a></li>
+            <li><a href="https://jinja.palletsprojects.com/en/latest/" target="_blank" class="external-link">Documentação do Jinja2</a></li>
+            <li><a href="https://www.figma.com/resource-library/what-is-design-thinking/" target="_blank" class="external-link">Design Thinking</a></li>
+        </ul>
+        <p>
+            Ao final desta etapa, você terá páginas dinâmicas e visualmente atraentes para cada herói, enriquecendo a experiência do usuário!
+        </p>
+    </div>
+{% endblock %}

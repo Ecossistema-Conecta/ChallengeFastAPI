@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Etapa 6: Autenticação Robusta com Refresh Token</h2>
+    <p>
+        Agora que você implementou autenticação básica com JWT, é hora de adicionar funcionalidades mais avançadas.
+        Nesta etapa, você aprenderá a implementar <strong>Refresh Tokens</strong>, permitindo que usuários obtenham
+        novos tokens de acesso sem precisar fazer login novamente.
+    </p>
+
+    <div class="info-box">
+        <h3>O que você vai fazer?</h3>
+        <ul>
+            <li>Implementar Refresh Tokens para renovar tokens expirados.</li>
+            <li>Armazenar Refresh Tokens de forma segura.</li>
+            <li>Seguir boas práticas para melhorar a segurança e escalabilidade da autenticação.</li>
+        </ul>
+    </div>
+
+    <div class="fastapi-summary">
+        <h3>O que é um Refresh Token?</h3>
+        <p>
+            Um Refresh Token é um token de longa duração usado exclusivamente para gerar novos tokens de acesso.
+            Ao contrário do token de acesso (que é curto e usado em cada requisição), o Refresh Token é mais seguro
+            e pode ser armazenado em local seguro, como cookies HTTP-only.
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>Fluxo de Autenticação com Refresh Tokens</h3>
+        <div class="features-grid">
+            <div class="feature-card">
+                <img src="/static/img/icon_login.png" alt="Login Icon" class="feature-icon"/>
+                <h4>Login</h4>
+                <p>
+                    O usuário faz login e recebe um <strong>Access Token</strong> (curto) e um
+                    <strong>Refresh Token</strong> (longo).
+                </p>
+            </div>
+            <div class="feature-card">
+                <img src="/static/img/icon_access.png" alt="Access Token Icon" class="feature-icon"/>
+                <h4>Access Token</h4>
+                <p>
+                    Usado para autenticar o acesso em rotas protegidas. Expira rapidamente.
+                </p>
+            </div>
+            <div class="feature-card">
+                <img src="/static/img/icon_refresh.png" alt="Refresh Token Icon" class="feature-icon"/>
+                <h4>Refresh Token</h4>
+                <p>
+                    Usado para obter um novo Access Token sem precisar refazer o login.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Exemplo de Implementação</h3>
+        <p>
+            No FastAPI, você pode usar dois endpoints separados para gerenciar o fluxo:
+            um para login e outro para refresh. Exemplo:
+        </p>
+        <div class="code-snippet">
+<pre><code class="language-python">
+@router.post("/login")
+def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    access_token = create_access_token({"sub": user.username}, timedelta(minutes=15))
+    refresh_token = create_refresh_token({"sub": user.username})
+    return {"access_token": access_token, "refresh_token": refresh_token}
+
+@router.post("/refresh")
+def refresh_token(refresh_token: str = Body(...)):
+    payload = verify_refresh_token(refresh_token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+    access_token = create_access_token({"sub": payload["sub"]}, timedelta(minutes=15))
+    return {"access_token": access_token}
+</code></pre>
+        </div>
+        <p>
+            Aqui, o <code>verify_refresh_token</code> é uma função que valida o Refresh Token recebido e retorna as claims do token.
+        </p>
+    </div>
+
+{% endblock %}
+
+
+{% block next_step_hint %}
+    <div class="next-step-hint">
+        <h3>Referências e Estudos Adicionais</h3>
+        <ul>
+            <li><a href="https://fastapi.tiangolo.com/tutorial/security/" target="_blank" class="external-link">FastAPI Security</a></li>
+            <li><a href="https://jwt.io/" target="_blank" class="external-link">JWT.io (visualizador e validação de tokens)</a></li>
+            <li><a href="https://auth0.com/docs/tokens/concepts/refresh-tokens" target="_blank" class="external-link">Refresh Tokens (Auth0)</a></li>
+        </ul>
+        <p>
+            Agora, sua aplicação terá um sistema de autenticação mais seguro e escalável.
+            Vamos avançar para a próxima etapa, onde falaremos sobre testes.
+        </p>
+        <a href="/challenge?step=7" class="btn">Avançar para Etapa 7</a>
+    </div>
+{% endblock %}

@@ -13,18 +13,65 @@
             <h1 class="game-title">FastAPI Challenge Arena</h1>
         </div>
         <nav class="navigation">
-            {% if next_step %}
-                <a href="/challenge?step={{ next_step }}">Etapa {{ next_step }}</a>
-            {% endif %}
+            <div class="nav-buttons">
+                {% if previous_step_url %}
+                    <a href="{{ previous_step_url }}" class="nav-button prev-button">
+                        <span class="icon">⬅️</span> {% if previous_step is none %} Overview {% else %} Etapa {{ previous_step }} {% endif %}
+                    </a>
+                {% endif %}
+
+                {% if next_step_url %}
+                    <a href="{{ next_step_url }}" class="nav-button next-button">
+                        Etapa {{ next_step }} <span class="icon">➡️</span>
+                    </a>
+                {% endif %}
+            </div>
         </nav>
     </div>
 
     <div class="content">
-        {% block content %}{% endblock %}
+        <div class="{% block container_class %}challenge-container{% endblock %}">
+            {% block content %}{% endblock %}
+
+            {% if github_link %}
+                <div class="repo-link">
+                    <h3>Repositório do Projeto</h3>
+                    <p>
+                        Veja exemplos e um direcionamento inicial em:
+                        <a href="https://github.com/seu-usuario/seu-repo-challenge" target="_blank" class="external-link">
+                            <img src="/static/img/github_icon.png" class="icon"/>
+                            Acesse o Repositório
+                        </a>
+                    </p>
+                </div>
+            {% endif %}
+
+            {% block next_step_hint %}{% endblock %}
+
+            {% if step and step_mentor_emails and step_mentor_emails|length > 0 %}
+                <div class="feedback-section">
+                    <h3>Envie seu Feedback</h3>
+                    <p>
+                        Gostou da etapa? Tem alguma sugestão ou elogio? Deixe seu comentário abaixo e ajude-nos a melhorar ainda mais.
+                    </p>
+                    <div id="feedback-message"></div>
+                    <form action="/feedback" method="POST" id="feedback-form" class="feedback-form" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="step" value="{{ step }}"/>
+                        <textarea name="comment" placeholder="Escreva aqui seu comentário..." required></textarea>
+                        <button type="submit" class="feedback-submit-btn">Enviar Comentários</button>
+                    </form>
+                </div>
+            {% endif %}
+
+        </div>
     </div>
 
     <div class="footer">
         <p>© 2024 Fast API playful - By Guilherme Pereira Lims</p>
     </div>
+    {% if step and step_mentor_emails and step_mentor_emails|length > 0 %}
+        <script src="/static/js/feedback.js"></script>
+    {% endif %}
+
 </body>
 </html>
